@@ -1,0 +1,2 @@
+MainPackage=C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\bin\AnyCPU\Release\TbInfoPackage_1.0.0.0_AnyCPU.msix
+SymbolPackage=C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\obj\Release\Symbols\TbInfoPackage_1.0.0.0_AnyCPU.appxsym

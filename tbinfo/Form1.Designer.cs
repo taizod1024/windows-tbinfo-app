@@ -35,8 +35,7 @@
             this.uSERDOMAINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cOMPUTERNAMEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSERNAMEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iPV4ADDRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iPV6ADDRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sESSIONNAMEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.customTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -47,6 +46,7 @@
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.Font = new System.Drawing.Font("Meiryo UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Location = new System.Drawing.Point(18, 2);
@@ -55,7 +55,6 @@
             this.label1.Size = new System.Drawing.Size(135, 44);
             this.label1.TabIndex = 0;
             this.label1.Text = "text1 text2 text3 text4 text5 text6 text7 text8 text9";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // timer1
             // 
@@ -68,44 +67,41 @@
             this.uSERDOMAINToolStripMenuItem,
             this.cOMPUTERNAMEToolStripMenuItem,
             this.uSERNAMEToolStripMenuItem,
-            this.iPV4ADDRToolStripMenuItem,
-            this.iPV6ADDRToolStripMenuItem,
+            this.sESSIONNAMEToolStripMenuItem,
             this.toolStripSeparator2,
             this.customTextToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 170);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 148);
             // 
             // uSERDOMAINToolStripMenuItem
             // 
             this.uSERDOMAINToolStripMenuItem.Name = "uSERDOMAINToolStripMenuItem";
             this.uSERDOMAINToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.uSERDOMAINToolStripMenuItem.Text = "USERDOMAIN";
+            this.uSERDOMAINToolStripMenuItem.Click += new System.EventHandler(this.uSERDOMAINToolStripMenuItem_Click);
             // 
             // cOMPUTERNAMEToolStripMenuItem
             // 
             this.cOMPUTERNAMEToolStripMenuItem.Name = "cOMPUTERNAMEToolStripMenuItem";
             this.cOMPUTERNAMEToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.cOMPUTERNAMEToolStripMenuItem.Text = "COMPUTERNAME";
+            this.cOMPUTERNAMEToolStripMenuItem.Click += new System.EventHandler(this.cOMPUTERNAMEToolStripMenuItem_Click);
             // 
             // uSERNAMEToolStripMenuItem
             // 
             this.uSERNAMEToolStripMenuItem.Name = "uSERNAMEToolStripMenuItem";
             this.uSERNAMEToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.uSERNAMEToolStripMenuItem.Text = "USERNAME";
+            this.uSERNAMEToolStripMenuItem.Click += new System.EventHandler(this.uSERNAMEToolStripMenuItem_Click);
             // 
-            // iPV4ADDRToolStripMenuItem
+            // sESSIONNAMEToolStripMenuItem
             // 
-            this.iPV4ADDRToolStripMenuItem.Name = "iPV4ADDRToolStripMenuItem";
-            this.iPV4ADDRToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.iPV4ADDRToolStripMenuItem.Text = "IPV4 ADDR";
-            // 
-            // iPV6ADDRToolStripMenuItem
-            // 
-            this.iPV6ADDRToolStripMenuItem.Name = "iPV6ADDRToolStripMenuItem";
-            this.iPV6ADDRToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.iPV6ADDRToolStripMenuItem.Text = "IPV6 ADDR";
+            this.sESSIONNAMEToolStripMenuItem.Name = "sESSIONNAMEToolStripMenuItem";
+            this.sESSIONNAMEToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.sESSIONNAMEToolStripMenuItem.Text = "SESSIONNAME";
+            this.sESSIONNAMEToolStripMenuItem.Click += new System.EventHandler(this.sESSIONNAMEToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -115,8 +111,9 @@
             // customTextToolStripMenuItem
             // 
             this.customTextToolStripMenuItem.Name = "customTextToolStripMenuItem";
-            this.customTextToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.customTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.customTextToolStripMenuItem.Text = "custom text";
+            this.customTextToolStripMenuItem.Click += new System.EventHandler(this.customTextToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -143,10 +140,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(160, 48);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -175,8 +174,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem customTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cOMPUTERNAMEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem iPV4ADDRToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem iPV6ADDRToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sESSIONNAMEToolStripMenuItem;
     }
 }
 
