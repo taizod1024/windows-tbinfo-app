@@ -10,11 +10,11 @@ namespace TbInfo
         {
             InitializeComponent();
 
-            this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
             this.uSERDOMAINToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.userdomain;
             this.cOMPUTERNAMEToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.computername;
             this.uSERNAMEToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.username;
             this.sESSIONNAMEToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.sessionname;
+            this.updatePosition();
             this.updateTheme();
             this.updateLabel();
 
@@ -23,10 +23,8 @@ namespace TbInfo
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            this.updatePosition();
             this.updateTheme();
-            this.TopMost = false;
-            this.TopMost = true;
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,6 +75,14 @@ namespace TbInfo
                 this.updateLabel();
             }
             this.timer1.Start();
+        }
+
+        private void updatePosition()
+        {
+            this.Left = 0;
+            this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
+            this.TopMost = false;
+            this.TopMost = true;
         }
 
         private void updateLabel()
