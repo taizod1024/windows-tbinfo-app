@@ -1,15 +1,24 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TbInfo
 {
     public partial class Form1 : Form
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
         public Form1()
         {
             InitializeComponent();
-
             this.uSERDOMAINToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.userdomain;
             this.cOMPUTERNAMEToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.computername;
             this.uSERNAMEToolStripMenuItem.Checked = tbInfo.Properties.Settings.Default.username;
@@ -79,10 +88,10 @@ namespace TbInfo
 
         private void updatePosition()
         {
-            this.Left = 0;
+
+            this.Left = IsWIndowsWidgetVisible ? 160 : 0;
             this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
-            this.TopMost = false;
-            this.TopMost = true;
+            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
         }
 
         private void updateLabel()
@@ -102,7 +111,7 @@ namespace TbInfo
             }
             if (this.sESSIONNAMEToolStripMenuItem.Checked)
             {
-                text +=  Environment.GetEnvironmentVariable("SESSIONNAME") + Environment.NewLine;
+                text += Environment.GetEnvironmentVariable("SESSIONNAME") + Environment.NewLine;
             }
             text += tbInfo.Properties.Settings.Default.custom_text + Environment.NewLine;
             this.label1.Text = text;
@@ -140,6 +149,21 @@ namespace TbInfo
                     return true;
                 var v = (int)key.GetValue(WindowsThemeRegistryValueName);
                 return v > 0;
+            }
+        }
+
+        public static bool IsWIndowsWidgetVisible
+        {
+            get
+            {
+                const string WindowsWidgetRegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced";
+                const string WindowsWidgetRegistryValueName = "TaskbarDa";
+
+                var key = Registry.CurrentUser.OpenSubKey(WindowsWidgetRegistryKeyPath);
+                if (key == null)
+                    return false;
+                var v = (int)key.GetValue(WindowsWidgetRegistryValueName);
+                return v != 0;
             }
         }
     }
