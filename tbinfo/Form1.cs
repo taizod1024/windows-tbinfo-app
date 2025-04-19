@@ -1,21 +1,17 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+// TODO 他に最大化しているアプリがあるときの判定、マルチウィンドウでの判定も気にする
 
 namespace TbInfo
 {
     public partial class Form1 : Form
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-        private const uint SWP_NOSIZE = 0x0001;
-        private const uint SWP_NOMOVE = 0x0002;
-        private const uint SWP_NOACTIVATE = 0x0010;
-
         public Form1()
         {
             InitializeComponent();
@@ -88,11 +84,27 @@ namespace TbInfo
 
         private void updatePosition()
         {
-
-            this.Left = IsWIndowsWidgetVisible ? 160 : 0;
-            this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
-            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+            if (!IsFullscreenAppOnScreen)
+            {
+                this.Visible = true;
+                if (!IsTaskbarLeftAligned)
+                {
+                    this.Left = IsWIndowsWidgetVisible ? 160 : 0;
+                }
+                else
+                {
+                    var rect = GetTaskTray();
+                    this.Left = rect.Left - this.Width - (IsWIndowsWidgetVisible ? 160 : 0);
+                }
+                this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
+                SetWindowTopmost();
+            }
+            else
+            {
+                this.Visible = false;
+            }
         }
+
 
         private void updateLabel()
         {
@@ -137,17 +149,50 @@ namespace TbInfo
             }
         }
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr FindWindowEx(IntPtr parentWnd, IntPtr previousWnd, string className, string windowText);
+
+        private void SetWindowTopmost()
+        {
+            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
         public static bool IsWindowsThemeLight
         {
             get
             {
-                const string WindowsThemeRegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-                const string WindowsThemeRegistryValueName = "SystemUsesLightTheme";
+                const string registryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+                const string registryValueName = "SystemUsesLightTheme";
 
-                var key = Registry.CurrentUser.OpenSubKey(WindowsThemeRegistryKeyPath);
+                var key = Registry.CurrentUser.OpenSubKey(registryKeyPath);
                 if (key == null)
                     return true;
-                var v = (int)key.GetValue(WindowsThemeRegistryValueName);
+                var v = (int)key.GetValue(registryValueName);
                 return v > 0;
             }
         }
@@ -156,15 +201,97 @@ namespace TbInfo
         {
             get
             {
-                const string WindowsWidgetRegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced";
-                const string WindowsWidgetRegistryValueName = "TaskbarDa";
+                const string registryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced";
+                const string registryValueName = "TaskbarDa";
 
-                var key = Registry.CurrentUser.OpenSubKey(WindowsWidgetRegistryKeyPath);
+                var key = Registry.CurrentUser.OpenSubKey(registryKeyPath);
                 if (key == null)
                     return false;
-                var v = (int)key.GetValue(WindowsWidgetRegistryValueName);
+                var v = (int)key.GetValue(registryValueName);
                 return v != 0;
             }
         }
+
+        public static bool IsTaskbarLeftAligned
+        {
+            get
+            {
+                const string registryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced";
+                const string registryValueName = "TaskbarAl";
+
+                var key = Registry.CurrentUser.OpenSubKey(registryKeyPath);
+                if (key == null)
+                    return false;
+                var v = (int)key.GetValue(registryValueName);
+                return v == 0;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        private static Rectangle GetTaskTray()
+        {
+            // タスクバーのウィンドウハンドルの取得
+            IntPtr taskbarWindow = FindWindow("Shell_TrayWnd", null);
+            if (taskbarWindow == IntPtr.Zero)
+            {
+                return new Rectangle(-1, -1, -1, -1);
+            }
+
+            // タスクトレイのウィンドウハンドルの取得
+            IntPtr tasktrayWindow = FindWindowEx(taskbarWindow, IntPtr.Zero, "TrayNotifyWnd",null);
+            if (taskbarWindow == IntPtr.Zero)
+            {
+                return new Rectangle(-1, -1, -1, -1);
+            }
+
+            // タスクバーの位置とサイズの取得
+            if (!GetWindowRect(tasktrayWindow, out RECT rect))
+            {
+                return new Rectangle(-1, -1, -1, -1);
+            }
+
+            return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+        }
+
+        public static bool IsFullscreenAppOnScreen
+        {
+            get
+            {
+                var screenBounds = Screen.PrimaryScreen.Bounds;
+                var fullscreenWindows = new List<IntPtr>();
+                IntPtr foregroundWindow = GetForegroundWindow();
+
+                var result = false;
+                EnumWindows((hWnd, lParam) =>
+                {
+                    if (IsWindowVisible(hWnd) && GetWindowRect(hWnd, out RECT rect))
+                    {
+                        var windowBounds = new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+
+                        // ウィンドウがスクリーン全体を覆っているか確認
+                        if (windowBounds == screenBounds)
+                        {
+                            if (hWnd == foregroundWindow)
+                            {
+                                result = true;
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }, IntPtr.Zero);
+
+                return result;
+            }
+        }
+
     }
 }

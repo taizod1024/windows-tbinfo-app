@@ -12,8 +12,6 @@ namespace TbInfo
         [STAThread]
         static void Main()
         {
-            // TODO 二重起動防止  
-
             const string appName = "tbinfo";
             bool created;
 
