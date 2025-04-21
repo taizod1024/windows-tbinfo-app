@@ -105,7 +105,6 @@ namespace TbInfo
             }
         }
 
-
         private void updateLabel()
         {
             var text = "";
@@ -191,7 +190,9 @@ namespace TbInfo
 
                 var key = Registry.CurrentUser.OpenSubKey(registryKeyPath);
                 if (key == null)
+                {
                     return true;
+                }
                 var v = (int)key.GetValue(registryValueName);
                 return v > 0;
             }
@@ -206,7 +207,9 @@ namespace TbInfo
 
                 var key = Registry.CurrentUser.OpenSubKey(registryKeyPath);
                 if (key == null)
+                {
                     return false;
+                }
                 var v = (int)key.GetValue(registryValueName);
                 return v != 0;
             }
@@ -279,6 +282,7 @@ namespace TbInfo
                         // ウィンドウがスクリーン全体を覆っているか確認
                         if (windowBounds == screenBounds)
                         {
+                            // ウィンドウがフォアグラウンドウィンドウであるか確認
                             if (hWnd == foregroundWindow)
                             {
                                 result = true;

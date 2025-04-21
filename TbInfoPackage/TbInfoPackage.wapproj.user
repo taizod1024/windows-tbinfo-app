@@ -5,5 +5,21 @@
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>neutral</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+    <Source>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</Source>
+    <SmallTileSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</SmallTileSource>
+    <MediumTileSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</MediumTileSource>
+    <WideTileSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</WideTileSource>
+    <LargeTileSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</LargeTileSource>
+    <AppIconSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</AppIconSource>
+    <SplashScreenSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\taizo\projects\windows-tbinfo-app\TbInfoPackage\Images\100x100.png</PackageLogoSource>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebuggerFlavor>AppHostLocalDebugger</DebuggerFlavor>
+    <RemoteDebugEnabled>False</RemoteDebugEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>AppHostLocalDebugger</DebuggerFlavor>
+    <RemoteDebugEnabled>False</RemoteDebugEnabled>
   </PropertyGroup>
 </Project>
