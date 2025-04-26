@@ -87,16 +87,16 @@ namespace TbInfo
             if (!IsFullscreenAppOnScreen)
             {
                 this.Visible = true;
+                var rect = GetTaskTray();
                 if (!IsTaskbarLeftAligned)
                 {
                     this.Left = IsWIndowsWidgetVisible ? 160 : 0;
                 }
                 else
                 {
-                    var rect = GetTaskTray();
                     this.Left = rect.Left - this.Width - (IsWIndowsWidgetVisible ? 160 : 0);
                 }
-                this.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height - 48;
+                this.Top = rect.Top;
                 SetWindowTopmost();
             }
             else
