@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="3fc5f428-f057-4a0d-b731-f14b7b72696a"
-    Publisher="CN=taizo"
-    Version="1.0.2.0" />
+    Name="yamamototaizo.502640D566AA9"
+    Publisher="CN=EF35DD74-9FB0-43F6-A109-CA926F1AFD88"
+    Version="1.0.4.0" />
 
   <Properties>
-    <DisplayName>tbinfo</DisplayName>
-    <PublisherDisplayName>taizod1024@gmail.com</PublisherDisplayName>
+    <DisplayName>taskbar info</DisplayName>
+    <PublisherDisplayName>yamamoto taizo</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="tbinfo"
+        DisplayName="taskbar info"
         Description="taskbar info - https://github.com/taizod1024/windows-tbinfo-app"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
