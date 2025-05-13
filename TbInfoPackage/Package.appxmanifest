@@ -9,7 +9,7 @@
   <Identity
     Name="yamamototaizo.502640D566AA9"
     Publisher="CN=EF35DD74-9FB0-43F6-A109-CA926F1AFD88"
-    Version="1.0.4.0" />
+    Version="1.0.5.0" />
 
   <Properties>
     <DisplayName>taskbar info</DisplayName>
